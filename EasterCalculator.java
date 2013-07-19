@@ -7,9 +7,13 @@ import java.util.GregorianCalendar;
  *
  * @author Drakoulelis <drakouleli at ceid.upatras.gr>
  */
-public class EasterCalculator {
+public final class EasterCalculator {
 
-    Calendar easter;
+    private Calendar easter;
+    private Calendar forefathers;
+    private Calendar george;
+    private Calendar mark;
+    private Calendar cloe;
 
     /**
      *
@@ -20,6 +24,9 @@ public class EasterCalculator {
 	    throw new IllegalArgumentException("Algorithm invalid before April 1583");
 	}
 	easter = calculateEaster(year);
+	forefathers = calculateSundayOfTheForefathers(year);
+	george = calculateSaintGeorge(year);
+	mark = calculateMarkTheEvangelist(year);
     }
 
     private GregorianCalendar calculateEaster(int year) {
@@ -40,6 +47,46 @@ public class EasterCalculator {
 	return new GregorianCalendar(year, m, d);
     }
 
+    private GregorianCalendar calculateSundayOfTheForefathers(int year) {
+	GregorianCalendar f = new GregorianCalendar(year, 12, 11);
+
+	if (f.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+	    f.add(Calendar.DAY_OF_WEEK, f.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY);
+	}
+
+	return f;
+    }
+
+    private GregorianCalendar calculateSaintGeorge(int year) {
+	GregorianCalendar g = new GregorianCalendar(year, 4, 23);
+
+	if (g.before(easter)) {
+	    g.set(year, easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 1);
+	}
+
+	return g;
+    }
+
+    private GregorianCalendar calculateMarkTheEvangelist(int year) {
+	GregorianCalendar m = new GregorianCalendar(year, 4, 25);
+
+	if (m.before(george)) {
+	    m.set(year, easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 2);
+	}
+
+	return m;
+    }
+
+    private GregorianCalendar calculateCloe(int year) {
+	GregorianCalendar c = new GregorianCalendar(year, 2, 13);
+
+	if (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+	    c.add(Calendar.DAY_OF_WEEK, c.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY);
+	}
+
+	return c;
+    }
+
     /**
      * Returns Easter day. Also known as "Πάσχα"
      *
@@ -47,6 +94,42 @@ public class EasterCalculator {
      */
     public Calendar getEaster() {
 	return easter;
+    }
+
+    /**
+     * Returns Sunday of the Forefathers. Also known as "Των Προπατόρων"
+     *
+     * @return a Calendar object representing the day.
+     */
+    public Calendar getSundayOfTheForefathers() {
+	return forefathers;
+    }
+
+    /**
+     * Returns Saint George day.
+     *
+     * @return a Calendar object representing the day.
+     */
+    public Calendar getSaintGeorgeDay() {
+	return george;
+    }
+
+    /**
+     * Returns Mark the Evangelist day.
+     *
+     * @return a Calendar object representing the day.
+     */
+    public Calendar getMarkTheEvangelistDay() {
+	return mark;
+    }
+
+    /**
+     * Returns Saint Cloe day.
+     *
+     * @return a Calendar object representing the day.
+     */
+    public Calendar getSaintCloeDay() {
+	return cloe;
     }
 
     /**
