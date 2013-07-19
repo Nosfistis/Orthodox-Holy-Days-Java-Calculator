@@ -1,3 +1,4 @@
+package javaapplication3;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,71 +21,74 @@ public final class EasterCalculator {
      * @param year The year to search dates for. It must be over 1582.
      */
     public EasterCalculator(int year) {
-	if (year <= 1582) {
-	    throw new IllegalArgumentException("Algorithm invalid before April 1583");
-	}
-	easter = calculateEaster(year);
-	forefathers = calculateSundayOfTheForefathers(year);
-	george = calculateSaintGeorge(year);
-	mark = calculateMarkTheEvangelist(year);
+        if (year <= 1582) {
+            throw new IllegalArgumentException("Algorithm invalid before April 1583");
+        }
+        easter = calculateEaster(year);
+        forefathers = calculateSundayOfTheForefathers(year);
+        george = calculateSaintGeorge(year);
+        mark = calculateMarkTheEvangelist(year);
+        cloe = calculateCloe(year);
     }
 
     private GregorianCalendar calculateEaster(int year) {
-	int e = 10;
+        int e = 10;
 
-	if (year > 1600) {
-	    int y2 = (int) Math.floor(year / 100);
-	    e = 10 + y2 - 16 - (int) Math.floor((y2 - 16) / 4);
-	}
+        if (year > 1600) {
+            int y2 = (int) Math.floor(year / 100);
+            e = 10 + y2 - 16 - (int) Math.floor((y2 - 16) / 4);
+        }
 
-	int G = year % 19;
-	int I = (19 * G + 15) % 30;
-	int J = (year + (int) Math.floor(year / 4) + I) % 7;
-	int L = I - J;
-	int p = L + e;
-	int d = 1 + (p + 27 + (int) Math.floor((p + 6) / 40)) % 31;
-	int m = 3 + (int) Math.floor((p + 26) / 30) - 1;
-	return new GregorianCalendar(year, m, d);
+        int G = year % 19;
+        int I = (19 * G + 15) % 30;
+        int J = (year + (int) Math.floor(year / 4) + I) % 7;
+        int L = I - J;
+        int p = L + e;
+        int d = 1 + (p + 27 + (int) Math.floor((p + 6) / 40)) % 31;
+        int m = 3 + (int) Math.floor((p + 26) / 30) - 1;
+        return new GregorianCalendar(year, m, d);
     }
 
     private GregorianCalendar calculateSundayOfTheForefathers(int year) {
-	GregorianCalendar f = new GregorianCalendar(year, 12, 11);
+        GregorianCalendar f = new GregorianCalendar(year, Calendar.DECEMBER, 11);
 
-	if (f.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-	    f.add(Calendar.DAY_OF_WEEK, f.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY);
-	}
+        if (f.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+            f.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - f.get(Calendar.DAY_OF_WEEK) + Calendar.SUNDAY);
+        }
 
-	return f;
+        return f;
     }
 
     private GregorianCalendar calculateSaintGeorge(int year) {
-	GregorianCalendar g = new GregorianCalendar(year, 4, 23);
+        GregorianCalendar g = new GregorianCalendar(year, Calendar.APRIL, 23);
 
-	if (g.before(easter)) {
-	    g.set(year, easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 1);
-	}
+        if (g.before(easter) || g.equals(easter)) {
+            g = (GregorianCalendar) easter.clone();
+            g.add(Calendar.DAY_OF_MONTH, 1);
+        }
 
-	return g;
+        return g;
     }
 
     private GregorianCalendar calculateMarkTheEvangelist(int year) {
-	GregorianCalendar m = new GregorianCalendar(year, 4, 25);
+        GregorianCalendar m = new GregorianCalendar(year, Calendar.APRIL, 25);
 
-	if (m.before(george)) {
-	    m.set(year, easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 2);
-	}
+        if (m.before(george) || m.equals(george)) {
+            m = (GregorianCalendar) george.clone();
+            m.add(Calendar.DAY_OF_MONTH, 1);
+        }
 
-	return m;
+        return m;
     }
 
     private GregorianCalendar calculateCloe(int year) {
-	GregorianCalendar c = new GregorianCalendar(year, 2, 13);
+        GregorianCalendar c = new GregorianCalendar(year, Calendar.FEBRUARY, 13);
 
-	if (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-	    c.add(Calendar.DAY_OF_WEEK, c.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY);
-	}
+        if (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+            c.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - c.get(Calendar.DAY_OF_WEEK) + Calendar.SUNDAY);
+        }
 
-	return c;
+        return c;
     }
 
     /**
@@ -93,7 +97,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEaster() {
-	return easter;
+        return easter;
     }
 
     /**
@@ -102,7 +106,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getSundayOfTheForefathers() {
-	return forefathers;
+        return forefathers;
     }
 
     /**
@@ -111,7 +115,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getSaintGeorgeDay() {
-	return george;
+        return george;
     }
 
     /**
@@ -120,7 +124,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getMarkTheEvangelistDay() {
-	return mark;
+        return mark;
     }
 
     /**
@@ -129,7 +133,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getSaintCloeDay() {
-	return cloe;
+        return cloe;
     }
 
     /**
@@ -139,7 +143,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getPublicanDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 70);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 70);
     }
 
     /**
@@ -148,7 +152,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getProdigal() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 63);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 63);
     }
 
     /**
@@ -157,7 +161,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getAllSoulsDayA() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 57);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 57);
     }
 
     /**
@@ -166,7 +170,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getAllSoulsDayB() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 48);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 48);
     }
 
     /**
@@ -175,7 +179,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getCarnivalDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 56);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 56);
     }
 
     /**
@@ -184,7 +188,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getShroveMonday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 48);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 48);
     }
 
     /**
@@ -193,7 +197,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getShroveThursday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 59);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 59);
     }
 
     /**
@@ -202,7 +206,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getCheeseSunday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 49);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 49);
     }
 
     /**
@@ -211,7 +215,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getGregoryPalamasDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 35);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 35);
     }
 
     /**
@@ -220,7 +224,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getSaintTheodoreDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 43);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 43);
     }
 
     /**
@@ -229,7 +233,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getSundayOfOrthodoxy() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 42);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 42);
     }
 
     /**
@@ -238,7 +242,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getLazarusDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 8);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 8);
     }
 
     /**
@@ -247,7 +251,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getPalmSunday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 7);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 7);
     }
 
     /**
@@ -256,7 +260,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolyMonday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 6);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 6);
     }
 
     /**
@@ -265,7 +269,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolyTuesday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 5);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 5);
     }
 
     /**
@@ -274,7 +278,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolyWednesday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 4);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 4);
     }
 
     /**
@@ -283,7 +287,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolyThursday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 3);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 3);
     }
 
     /**
@@ -292,7 +296,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolyFriday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 2);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 2);
     }
 
     /**
@@ -301,7 +305,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolySaturday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 1);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) - 1);
     }
 
     /**
@@ -310,7 +314,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterMonday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 1);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 1);
     }
 
     /**
@@ -319,7 +323,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterTuesday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 2);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 2);
     }
 
     /**
@@ -328,7 +332,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterWednesday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 3);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 3);
     }
 
     /**
@@ -337,7 +341,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterThursday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 4);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 4);
     }
 
     /**
@@ -346,7 +350,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterFriday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 5);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 5);
     }
 
     /**
@@ -355,7 +359,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getEasterSaturday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 6);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 6);
     }
 
     /**
@@ -364,7 +368,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getLifeGivingSpringDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 5);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 5);
     }
 
     /**
@@ -373,7 +377,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getThomasSunday() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 7);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 7);
     }
 
     /**
@@ -382,7 +386,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getMyrrhbearersDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 14);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 14);
     }
 
     /**
@@ -391,7 +395,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getParalyticDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 21);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 21);
     }
 
     /**
@@ -400,7 +404,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getAscensionDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 39);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 39);
     }
 
     /**
@@ -409,7 +413,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getPentecostDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 49);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 49);
     }
 
     /**
@@ -418,7 +422,7 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getAllSaintsDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 56);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 56);
     }
 
     /**
@@ -427,6 +431,6 @@ public final class EasterCalculator {
      * @return a Calendar object representing the day.
      */
     public Calendar getHolySpiritDay() {
-	return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 50);
+        return new GregorianCalendar(easter.get(Calendar.YEAR), easter.get(Calendar.MONTH), easter.get(Calendar.DAY_OF_MONTH) + 50);
     }
 }
